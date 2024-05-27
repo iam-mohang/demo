@@ -1,29 +1,30 @@
-resource "aws_eks_cluster" "eks_cluster" {
-  name = "eks-pro"
-  role_arn = aws_iam_role.eks_role.arn
-  vpc_config {
-    subnet_ids = aws_subnet.private_subnet.*.id
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  version         = "20.8.4"
+  cluster_name    = local.cluster_name
+  cluster_version = var.kubernetes_version
+  subnet_ids      = module.vpc.private_subnets
+
+  enable_irsa = true
+
+  tags = {
+    cluster = "demo"
   }
 
-  depends_on = [
-    aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.eks-AmazonEKSVPCResourceController
-  ]
-}
+  vpc_id = module.vpc.vpc_id
 
-resource "aws_eks_node_group" "eks_node_group" {
-  cluster_name    = aws_eks_cluster.eks_cluster.name
-  node_group_name = "eks-node-group"
-  node_role_arn   = aws_iam_role.eks_node_group_role.arn
-  subnet_ids      = aws_subnet.private_subnet.*.id
-  scaling_config {
-    desired_size = 2
-    max_size     = 3
-    min_size     = 1
+  eks_managed_node_group_defaults = {
+    ami_type               = "AL2_x86_64"
+    instance_types         = ["t3.medium"]
+    vpc_security_group_ids = [aws_security_group.all_worker_mgmt.id]
   }
-  depends_on = [
-    aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
-    aws_iam_role_policy_attachment.node-AmazonEKS_CNI_Policy
-  ]
+
+  eks_managed_node_groups = {
+
+    node_group = {
+      min_size     = 2
+      max_size     = 6
+      desired_size = 2
+    }
+  }
 }
