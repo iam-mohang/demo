@@ -11,8 +11,7 @@ resource "aws_security_group_rule" "all_worker_mgmt_ingress" {
   to_port           = 443
   security_group_id = aws_security_group.all_worker_mgmt.id
   type              = "ingress"
-  cidr_blocks = [
-    "0.0.0.0/0"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "all_worker_mgmt_egress" {
