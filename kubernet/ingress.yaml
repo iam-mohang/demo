@@ -4,9 +4,9 @@ metadata:
   name: nginx-ingress
   namespace: prod
   annotations:
-    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
 spec:
+  ingressClassName: alb
   rules:
     - http:
         paths:
