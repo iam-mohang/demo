@@ -140,4 +140,28 @@
                 "elasticloadbalancing:ModifyListener",
                 "elasticloadbalancing:ModifyRule",
                 "elasticloadbalancing:ModifyTargetGroup",
-                "elasticloadbalancing:ModifyTargetGroup
+                "elasticloadbalancing:ModifyTargetGroupAttributes"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "tag:GetResources",
+                "tag:TagResources",
+                "tag:UntagResources"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "waf-regional:GetWebACL",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "wafv2:GetWebACL",
+            "Resource": "*"
+        }
+    ]
+}
